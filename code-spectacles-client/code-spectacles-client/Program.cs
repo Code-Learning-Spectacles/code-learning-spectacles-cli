@@ -34,21 +34,21 @@ namespace code_spectacles_client
         static void DisplayHelp()
         {
             Console.WriteLine(">> Available commands and their functions:");
-            Console.WriteLine(">> GetCodeConstructs: Retrieves all code constructs or a specific code construct by ID.");
+            Console.WriteLine(">> available-constructs: Retrieves all code constructs or a specific code construct by ID.");
             Console.WriteLine(">> coding-languages: Retrieves all coding languages or a specific coding language by ID.");
-            Console.WriteLine(">> GetConstructTypes: Retrieves all construct types or a specific construct type by ID.");
+            Console.WriteLine(">> construct-types: Retrieves all construct types or a specific construct type by ID.");
             Console.WriteLine(">> GetLanguageConstruct: Retrieves all language constructs or a specific language construct by ID.");
             Console.WriteLine(">> GetProfileLanguageConstructs: Retrieves all profile language constructs or a specific profile language construct by ID.");
             Console.WriteLine(">> GetProfiles: Retrieves all profiles or a specific profile by ID.");
             Console.WriteLine(">> GetProfileLanguageConstructsNotes: Retrieves the notes for the language constructor");
-            Console.WriteLine(">> ChooseLanguageConstruct: Returns the construt type for a given language");
+            Console.WriteLine(">> get-construct: Returns the construt type for a given language");
         }
 
         static void ProcessCommand(Endpoints endpoints, string command)
         {
             switch (command)
             {
-                case "getcodeconstructs":
+                case "available-constructs":
                     endpoints.GetCodeConstructs();
                     break;
                 case "coding-languages":
@@ -66,7 +66,7 @@ namespace code_spectacles_client
                 case "getprofiles":
                     endpoints.GetProfiles();
                     break;
-                case "GetProfileLanguageConstructsNotes":
+                case "getprofilelanguageconstructsnotes":
                     endpoints.GetProfileLanguageConstructsNotes();
                     break;
                 case "get-construct":

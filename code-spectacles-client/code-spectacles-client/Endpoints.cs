@@ -57,8 +57,38 @@ namespace code_spectacles_client
             CodeConstructs codeConstructsObj = new CodeConstructs(this.client);
             codeConstructsObj.HitCodeConstructs(constructId);
             this.responseTuple = codeConstructsObj.GetResponse();
-            PrintResponse(responseTuple.response, responseTuple.responseStr);
+            PrintConstructTypes(responseTuple.response, responseTuple.responseStr);
         }
+
+        public void PrintConstructTypes(HttpResponseMessage response, string jsonResponse)
+        {
+            if (response.IsSuccessStatusCode)
+            {
+                using (JsonDocument document = JsonDocument.Parse(jsonResponse))
+                {
+                    JsonElement root = document.RootElement;
+                    if (root.ValueKind == JsonValueKind.Array)
+                    {
+                        int index = 1;
+                        foreach (JsonElement element in root.EnumerateArray())
+                        {
+                            JsonElement nameElement;
+                            if (element.TryGetProperty("name", out nameElement) && nameElement.ValueKind == JsonValueKind.String)
+                            {
+                                string name = nameElement.GetString();
+                                Console.WriteLine($"{index}. {name}");
+                                index++;
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Error: {response.StatusCode}");
+            }
+        }
+
         // GET specific code construct
         //public void GetCodeConstructsByConstructId(string constructId)
         //{
