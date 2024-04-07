@@ -14,6 +14,18 @@ using System.Net.Http.Json;
 namespace code_spectacles_client
 {
 
+    // Define a class to represent each language construct
+    public class LanguageConstruct
+    {
+        public int languageconstructid { get; set; }
+        public int codinglanguageid { get; set; }
+        public int codeconstructid { get; set; }
+        public string construct { get; set; }
+        public object codeconstruct { get; set; }
+        public object codinglanguage { get; set; }
+        public object[] profilelanguageconstructs { get; set; }
+    }
+
     internal class Endpoints
     {
         string baseUri = "https://localhost:7107/api/";
@@ -208,6 +220,110 @@ namespace code_spectacles_client
                 Console.Write(response.StatusCode.ToString() + '\n');
                 Console.ResetColor();
                 Console.WriteLine("═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════");
+            }
+        }
+
+        public void chooseLanguageConstruct()
+        {
+
+            Console.WriteLine("\n>> Please choose a coding language:\n");
+            GetCodingLanguages();
+            Console.Write("\n>> Enter the number corresponding to your choice: ");
+            string languageChoice = Console.ReadLine();
+
+
+            Console.WriteLine("\n>> Please choose a coding construct type:\n");
+            GetConstructTypes();
+            Console.Write("\n>> Enter the number corresponding to your choice: ");
+            string constructChoice = Console.ReadLine();
+            Console.Write("\n");
+
+
+            // Now you can call the appropriate method to fetch the desired data based on the choices
+            FetchData(languageChoice, constructChoice);
+        }
+
+        private Dictionary<int, string> languageConstructs = new Dictionary<int, string>();
+
+        private void FetchData(string languageId, string constructTypeId)
+        {
+            // Call GetLanguageConstruct to fetch data and store response
+            GetSpecifidLanguageConstruct(languageId, constructTypeId);
+
+
+        }
+
+
+        // Method to fetch language constructs and store response
+        private void GetSpecifidLanguageConstruct(string langConstructId, string codeconstructid)
+        {
+            // Convert langConstructId and codeconstructid to integers
+            int langId;
+            int constructId;
+
+            if (!int.TryParse(langConstructId, out langId))
+            {
+                // Handle the case where langConstructId cannot be parsed as an integer
+                Console.WriteLine("Invalid langConstructId. Please provide a valid integer value.");
+                return;
+            }
+
+            if (!int.TryParse(codeconstructid, out constructId))
+            {
+                // Handle the case where codeconstructid cannot be parsed as an integer
+                Console.WriteLine("Invalid codeconstructid. Please provide a valid integer value.");
+                return;
+            }
+
+            LanguageConstruct[] languageConstructs; // Define the array to hold language constructs
+
+            LanguageConstructs langConstructsObj = new LanguageConstructs(this.client);
+            langConstructsObj.HitLanguageConstructs();
+            this.responseTuple = langConstructsObj.GetResponse();
+            PrintLanguageConstruct(responseTuple.response, responseTuple.responseStr, langId, constructId);
+        }
+
+
+        private void PrintLanguageConstruct(HttpResponseMessage response, string jsonResponse, int langConstructId, int constructId)
+        {
+            if (response.IsSuccessStatusCode)
+            {
+                using (JsonDocument document = JsonDocument.Parse(jsonResponse))
+                {
+                    JsonElement root = document.RootElement;
+                    if (root.ValueKind == JsonValueKind.Array)
+                    {
+                        int index = 1;
+                        foreach (JsonElement element in root.EnumerateArray())
+                        {
+                            // Check if the JSON object has the expected structure
+                            JsonElement codingLanguageIdElement;
+                            JsonElement codeConstructIdElement;
+                            if (element.TryGetProperty("codinglanguageid", out codingLanguageIdElement) && codingLanguageIdElement.ValueKind == JsonValueKind.Number &&
+                                element.TryGetProperty("codeconstructid", out codeConstructIdElement) && codeConstructIdElement.ValueKind == JsonValueKind.Number)
+                            {
+                                int codingLanguageId = codingLanguageIdElement.GetInt32();
+                                int codeConstructId = codeConstructIdElement.GetInt32();
+
+                                // Check if the current object matches the provided criteria
+                                if (codingLanguageId == langConstructId && codeConstructId == constructId)
+                                {
+                                    JsonElement nameElement;
+                                    if (element.TryGetProperty("construct", out nameElement) && nameElement.ValueKind == JsonValueKind.String)
+                                    {
+                                        string name = nameElement.GetString();
+                                        Console.WriteLine($"{index}. {name}");
+                                        index++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Error: {response.StatusCode}");
             }
         }
 

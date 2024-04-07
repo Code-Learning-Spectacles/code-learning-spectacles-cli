@@ -11,7 +11,7 @@ namespace code_spectacles_client
 
             while (true)
             {
-                Console.WriteLine(">> Please provide a command or type '--help' to get a list of available commands:");
+                Console.WriteLine("\n>> Please provide a command or type '--help' to get a list of available commands:");
                 string input = Console.ReadLine().ToLower();
 
                 if (input == "--help")
@@ -35,12 +35,13 @@ namespace code_spectacles_client
         {
             Console.WriteLine(">> Available commands and their functions:");
             Console.WriteLine(">> GetCodeConstructs: Retrieves all code constructs or a specific code construct by ID.");
-            Console.WriteLine(">> GetCodingLanguages: Retrieves all coding languages or a specific coding language by ID.");
+            Console.WriteLine(">> coding-languages: Retrieves all coding languages or a specific coding language by ID.");
             Console.WriteLine(">> GetConstructTypes: Retrieves all construct types or a specific construct type by ID.");
             Console.WriteLine(">> GetLanguageConstruct: Retrieves all language constructs or a specific language construct by ID.");
             Console.WriteLine(">> GetProfileLanguageConstructs: Retrieves all profile language constructs or a specific profile language construct by ID.");
             Console.WriteLine(">> GetProfiles: Retrieves all profiles or a specific profile by ID.");
             Console.WriteLine(">> GetProfileLanguageConstructsNotes: Retrieves the notes for the language constructor");
+            Console.WriteLine(">> ChooseLanguageConstruct: Returns the construt type for a given language");
         }
 
         static void ProcessCommand(Endpoints endpoints, string command)
@@ -50,10 +51,10 @@ namespace code_spectacles_client
                 case "getcodeconstructs":
                     endpoints.GetCodeConstructs();
                     break;
-                case "getcodinglanguages":
+                case "coding-languages":
                     endpoints.GetCodingLanguages();
                     break;
-                case "getconstructtypes":
+                case "construct-types":
                     endpoints.GetConstructTypes();
                     break;
                 case "getlanguageconstruct":
@@ -67,6 +68,9 @@ namespace code_spectacles_client
                     break;
                 case "GetProfileLanguageConstructsNotes":
                     endpoints.GetProfileLanguageConstructsNotes();
+                    break;
+                case "get-construct":
+                    endpoints.chooseLanguageConstruct();
                     break;
                 default:
                     Console.WriteLine(">> Invalid command.");

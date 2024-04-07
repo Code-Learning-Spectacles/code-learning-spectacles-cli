@@ -28,7 +28,7 @@ namespace code_spectacles_client.AllEndPoints
             HttpResponseMessage response;
             if (langConstructId == "")
             {
-                Console.WriteLine($"Getting all language construct types...");
+                //Console.WriteLine($"Getting all language construct types...");
                 response = this.client.GetAsync("Languageconstructs").Result;
             }
             else
