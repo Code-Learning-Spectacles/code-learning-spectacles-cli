@@ -399,8 +399,7 @@ FodyWeavers.xsd
 
 .csproj
 App.config
-.sln
-code-spectacles-client/code-spectacles-client.sln
+
 
 code-spectacles-client/code-spectacles-client/code-spectacles-client.csproj
 
