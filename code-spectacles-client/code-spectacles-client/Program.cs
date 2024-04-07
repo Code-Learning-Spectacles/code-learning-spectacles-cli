@@ -1,12 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
 
 namespace code_spectacles_client
 {
@@ -16,31 +9,69 @@ namespace code_spectacles_client
         {
             Endpoints codeSpecsEndpoints = new Endpoints();
 
-            Console.WriteLine("****Testing Codeconstructs endpoint****");
-            codeSpecsEndpoints.GetCodeConstructs();
-            codeSpecsEndpoints.GetCodeConstructs("2");
+            while (true)
+            {
+                Console.WriteLine(">> Please provide a command or type '--help' to get a list of available commands:");
+                string input = Console.ReadLine().ToLower();
 
-            Console.WriteLine("****Testing Codinglanguages endpoint****");
-            codeSpecsEndpoints.GetCodingLanguages();
-            codeSpecsEndpoints.GetCodingLanguages("3");
+                if (input == "--help")
+                {
+                    DisplayHelp();
+                }
+                else if (input == "exit" || input == "close")
+                {
+                    break; // Exit the loop and end the program
+                }
+                else
+                {
+                    ProcessCommand(codeSpecsEndpoints, input);
+                }
+            }
 
-            Console.WriteLine("****Testing Constructtypes endpoint****");
-            codeSpecsEndpoints.GetConstructTypes();
-            codeSpecsEndpoints.GetConstructTypes("1");
+            Console.WriteLine(">> Done");
+        }
 
-            Console.WriteLine("****Testing Languageconstructs endpoint****");
-            codeSpecsEndpoints.GetLanguageConstruct();
-            codeSpecsEndpoints.GetLanguageConstruct("20");
+        static void DisplayHelp()
+        {
+            Console.WriteLine(">> Available commands and their functions:");
+            Console.WriteLine(">> GetCodeConstructs: Retrieves all code constructs or a specific code construct by ID.");
+            Console.WriteLine(">> GetCodingLanguages: Retrieves all coding languages or a specific coding language by ID.");
+            Console.WriteLine(">> GetConstructTypes: Retrieves all construct types or a specific construct type by ID.");
+            Console.WriteLine(">> GetLanguageConstruct: Retrieves all language constructs or a specific language construct by ID.");
+            Console.WriteLine(">> GetProfileLanguageConstructs: Retrieves all profile language constructs or a specific profile language construct by ID.");
+            Console.WriteLine(">> GetProfiles: Retrieves all profiles or a specific profile by ID.");
+            Console.WriteLine(">> GetProfileLanguageConstructsNotes: Retrieves the notes for the language constructor");
+        }
 
-            Console.WriteLine("****Testing Profilelanguageconstructs endpoint****");
-            codeSpecsEndpoints.GetProfileLanguageConstructs();
-            codeSpecsEndpoints.GetProfileLanguageConstructs("1");
-
-            Console.WriteLine("****Testing Profiles endpoint****");
-            codeSpecsEndpoints.GetProfiles();
-            codeSpecsEndpoints.GetProfiles("2");
-
-            Console.WriteLine("Done");
+        static void ProcessCommand(Endpoints endpoints, string command)
+        {
+            switch (command)
+            {
+                case "getcodeconstructs":
+                    endpoints.GetCodeConstructs();
+                    break;
+                case "getcodinglanguages":
+                    endpoints.GetCodingLanguages();
+                    break;
+                case "getconstructtypes":
+                    endpoints.GetConstructTypes();
+                    break;
+                case "getlanguageconstruct":
+                    endpoints.GetLanguageConstruct();
+                    break;
+                case "getprofilelanguageconstructs":
+                    endpoints.GetProfileLanguageConstructs();
+                    break;
+                case "getprofiles":
+                    endpoints.GetProfiles();
+                    break;
+                case "GetProfileLanguageConstructsNotes":
+                    endpoints.GetProfileLanguageConstructsNotes();
+                    break;
+                default:
+                    Console.WriteLine(">> Invalid command.");
+                    break;
+            }
         }
     }
 }
