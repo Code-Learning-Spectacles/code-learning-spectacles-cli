@@ -8,7 +8,7 @@ namespace code_spectacles_client
         static void Main(string[] args)
         {
             Endpoints codeSpecsEndpoints = new Endpoints();
-
+            codeSpecsEndpoints.FavouriteConstruct(constructId:10, note:"Yet another note");
             while (true)
             {
                 Console.WriteLine(">> Please provide a command or type '--help' to get a list of available commands:");

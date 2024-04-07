@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
@@ -7,10 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using static code_spectacles_client.Program;
 using code_spectacles_client.AllEndPoints;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+//using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Net.Http.Json;
+using static code_spectacles_client.AllEndPoints.ProfileLanguageConstructs;
 namespace code_spectacles_client
 {
 
@@ -20,6 +21,7 @@ namespace code_spectacles_client
         public HttpClient client = new HttpClient();
         // All responses are stored in this tuple
         (HttpResponseMessage response, string responseStr) responseTuple;
+        private readonly int profileId = 2; // THIS HAS TO BE UPDATED WITH LOGIN
 
         public Endpoints()
         {
@@ -39,7 +41,6 @@ namespace code_spectacles_client
             Console.ResetColor();
         }
 
-        // GET all code constructs
         public void GetCodeConstructs(string constructId = "")
         {
             CodeConstructs codeConstructsObj = new CodeConstructs(this.client);
@@ -47,17 +48,7 @@ namespace code_spectacles_client
             this.responseTuple = codeConstructsObj.GetResponse();
             PrintResponse(responseTuple.response, responseTuple.responseStr);
         }
-        // GET specific code construct
-        //public void GetCodeConstructsByConstructId(string constructId)
-        //{
-        //    CodeConstructs codeConstructsObj = new CodeConstructs(this.client);
-        //    codeConstructsObj.HitCodeConstructsByConstructId(constructId);
-        //    this.responseTuple = codeConstructsObj.GetResponse();
-        //    PrintResponse(responseTuple.response, responseTuple.responseStr);
-        //}
 
-        // GET all coding languages
-        // GET all coding languages
         public void GetCodingLanguages(string languageId = "")
         {
             CodingLanguages codingLanguagesObj = new CodingLanguages(this.client);
@@ -89,17 +80,6 @@ namespace code_spectacles_client
                 }
             }
         }
-
-
-
-        // GET coding language by Id
-        //public void GetCodingLanguageById(string languageId)
-        //{
-        //    CodingLanguages codingLanguagesObj = new CodingLanguages(this.client);
-        //    codingLanguagesObj.HitCodingLanguageById(languageId);
-        //    this.responseTuple = codingLanguagesObj.GetResponse();
-        //    PrintResponse(responseTuple.response, responseTuple.responseStr);
-        //}
 
         public void GetConstructTypes(string constructTypeId = "")
         {
@@ -183,6 +163,18 @@ namespace code_spectacles_client
             profilesObj.HitProfiles(profileId);
             this.responseTuple = profilesObj.GetResponse();
             PrintResponse(responseTuple.response, responseTuple.responseStr);
+        }
+
+        public void FavouriteConstruct(int constructId, string note)
+        {
+            ProfileLanguageConstructs langObj = new ProfileLanguageConstructs(this.client);
+            Favourite payload = new Favourite
+            {
+                profileId = this.profileId,
+                languageconstructId = constructId,
+                notes = note
+            };
+            langObj.PostNote(payload);
         }
 
         public void PrintResponse(HttpResponseMessage response, string responseStr)
