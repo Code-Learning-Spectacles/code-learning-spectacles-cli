@@ -41,7 +41,8 @@ namespace code_spectacles_client
             Console.WriteLine(">> GetProfileLanguageConstructs: Retrieves all profile language constructs or a specific profile language construct by ID.");
             Console.WriteLine(">> GetProfiles: Retrieves all profiles or a specific profile by ID.");
             Console.WriteLine(">> GetProfileLanguageConstructsNotes: Retrieves the notes for the language constructor");
-            Console.WriteLine(">> get-construct: Returns the construt type for a given language");
+            Console.WriteLine(">> get-construct-group: Returns the construct type group for a given language");
+            Console.WriteLine(">> get-construct: Returns the construct for a specified language within a group of constructs");
         }
 
         static void ProcessCommand(Endpoints endpoints, string command)
@@ -69,8 +70,11 @@ namespace code_spectacles_client
                 case "getprofilelanguageconstructsnotes":
                     endpoints.GetProfileLanguageConstructsNotes();
                     break;
-                case "get-construct":
+                case "get-construct-group":
                     endpoints.chooseLanguageConstruct();
+                    break;
+                case "get-construct":
+                    endpoints.chooseLanguageConstructByName();
                     break;
                 default:
                     Console.WriteLine(">> Invalid command.");

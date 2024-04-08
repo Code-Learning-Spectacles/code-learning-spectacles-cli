@@ -1,6 +1,16 @@
-﻿using System.Net.Http.Headers;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http.Headers;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using static code_spectacles_client.Program;
 using code_spectacles_client.AllEndPoints;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Net.Http.Json;
 namespace code_spectacles_client
 {
 
@@ -257,9 +267,6 @@ namespace code_spectacles_client
             Console.Write("\n>> Enter the number corresponding to your choice: ");
             string constructChoice = Console.ReadLine();
             Console.Write("\n");
-
-
-            // Now you can call the appropriate method to fetch the desired data based on the choices
             FetchData(languageChoice, constructChoice);
         }
 
@@ -273,6 +280,30 @@ namespace code_spectacles_client
 
         }
 
+        public void chooseLanguageConstructByName()
+        {
+            // Get code constructs and display their names
+            Console.WriteLine("List of construct names:");
+            GetCodeConstructs();
+            Console.WriteLine("\nPlease enter the name of the construct:");
+            string constructName = Console.ReadLine();
+
+            int codeConstructId = FindCodeConstructId(constructName);
+            if (codeConstructId == -1)
+            {
+                Console.WriteLine("Construct not found.");
+                return;
+            }
+            string codeConstructIdString = codeConstructId.ToString();
+            Console.WriteLine("\n>> Please choose a coding language:\n");
+            GetCodingLanguages();
+            Console.Write("\n>> Enter the number corresponding to your choice: ");
+            string languageChoiceString = Console.ReadLine();
+
+            FetchData(languageChoiceString, codeConstructIdString);
+
+
+        }
 
         // Method to fetch language constructs and store response
         private void GetSpecifidLanguageConstruct(string langConstructId, string codeconstructid)
@@ -347,6 +378,35 @@ namespace code_spectacles_client
             }
         }
 
+        private int FindCodeConstructId(string constructName)
+        {
+            // Parse the JSON response to find the codeconstructid corresponding to the entered construct name
+            using (JsonDocument document = JsonDocument.Parse(responseTuple.responseStr))
+            {
+                JsonElement root = document.RootElement;
+                if (root.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (JsonElement element in root.EnumerateArray())
+                    {
+                        JsonElement nameElement;
+                        if (element.TryGetProperty("name", out nameElement) && nameElement.ValueKind == JsonValueKind.String)
+                        {
+                            string name = nameElement.GetString();
+                            if (name == constructName)
+                            {
+                                JsonElement codeConstructIdElement;
+                                if (element.TryGetProperty("codeconstructid", out codeConstructIdElement) && codeConstructIdElement.ValueKind == JsonValueKind.Number)
+                                {
+                                    return codeConstructIdElement.GetInt32();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return -1; // Not found
+        }
 
     }
 }
