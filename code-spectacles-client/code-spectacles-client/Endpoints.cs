@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using static code_spectacles_client.Program;
+﻿using System.Net.Http.Headers;
 using code_spectacles_client.AllEndPoints;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Net.Http.Json;
 namespace code_spectacles_client
 {
 
