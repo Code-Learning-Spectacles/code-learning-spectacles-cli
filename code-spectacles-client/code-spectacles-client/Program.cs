@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net;
 
 namespace code_spectacles_client
