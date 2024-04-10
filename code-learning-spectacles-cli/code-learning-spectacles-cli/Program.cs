@@ -15,11 +15,10 @@ namespace code_learning_spectacles_cli
     {
         static void Main(string[] args)
         {
-
+            Console.WriteLine(Environment.GetEnvironmentVariable("ACCESS_TOKEN"));
             Endpoints codeSpecsEndpoints = new Endpoints();
             Authenticator authenticator = new Authenticator();
             authenticator.AuthenticateAsync();
-
             while (!Authenticator.authenticationSuccessful)
             {
 
@@ -60,6 +59,7 @@ namespace code_learning_spectacles_cli
             Console.WriteLine(">> GetProfiles: Retrieves all profiles or a specific profile by ID.");
             Console.WriteLine(">> GetProfileLanguageConstructsNotes: Retrieves the notes for the language constructor");
             Console.WriteLine(">> get-construct: Returns the construt type for a given language");
+            Console.WriteLine("\n>> Short hand notation: java for-loop");
         }
 
         static void ProcessCommand(Endpoints endpoints, string command)
@@ -88,7 +88,7 @@ namespace code_learning_spectacles_cli
                     endpoints.GetProfileLanguageConstructsNotes();
                     break;
                 case "get-construct":
-                    endpoints.chooseLanguageConstruct();
+                    endpoints.GetSingleConstruct();
                     break;
                 case "note":
                     endpoints.FavouriteConstruct(constructId: 1, note: "This is a note posted during testing");

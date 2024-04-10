@@ -45,9 +45,6 @@ namespace code_learning_spectacles_cli
                 Helpers.Profile = await GetProfileAsync();
                 authenticationSuccessful = true;
             }
-            //string temp = "ivan";
-            //return response2;
-
         }
 
         private async Task<AuthObject?> GetProfileAsync()
@@ -57,8 +54,8 @@ namespace code_learning_spectacles_cli
                 string url = "https://api.github.com/user";
                 HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Get, url);
                 msg.Headers.Add("User-Agent", "CodeLearningSpectaclesAPI");
-                //msg.Headers.Add("Authorization", "Bearer " + Environment.GetEnvironmentVariable("ACCESS_TOKEN"));
-                msg.Headers.Add("Authorization", "Bearer " + Helpers.accesstokentemp);
+                msg.Headers.Add("Authorization", "Bearer " + Environment.GetEnvironmentVariable("ACCESS_TOKEN"));
+                //msg.Headers.Add("Authorization", "Bearer " + Helpers.accesstokentemp);
                 HttpResponseMessage response = await Endpoints.client.SendAsync(msg);
 
                 if (response.IsSuccessStatusCode)

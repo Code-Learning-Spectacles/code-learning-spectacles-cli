@@ -10,7 +10,6 @@ namespace code_learning_spectacles_cli.Models
   {
     public int Profileid { get; set; }
     public string Name { get; set; }
-    public object[] profilelanguageconstructs { get; set; }
   }
 
 }

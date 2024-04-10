@@ -39,5 +39,13 @@ namespace code_learning_spectacles_cli.AllEndPoints
             string responseStr = await response.Content.ReadAsStringAsync();
             this.responseTuple = (response, responseStr);
         }
+
+        public async void HitLanguageConstructsByLangIdByConstructId(string langId, string constructId)
+        {
+            HttpResponseMessage response;
+            response = client.GetAsync($"Languageconstructs/getByLanguage/getByConstructId/{langId}/{constructId}").Result;
+            string responseStr = await response.Content.ReadAsStringAsync();
+            this.responseTuple = (response, responseStr);
+        }
     }
 }

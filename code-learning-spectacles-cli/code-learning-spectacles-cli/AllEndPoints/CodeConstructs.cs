@@ -40,5 +40,13 @@ namespace code_learning_spectacles_cli
             this.responseTuple = (response, responseStr);
         }
 
+        public async void HitCodeConstructsByConstructTypeId(string constructTypeId = "")
+        {
+            HttpResponseMessage response;
+            response = this.client.GetAsync($"Codeconstructs/getByConstructType/{constructTypeId}").Result;
+            string responseStr = await response.Content.ReadAsStringAsync();
+            this.responseTuple = (response, responseStr);
+        }
+
     }
 }
