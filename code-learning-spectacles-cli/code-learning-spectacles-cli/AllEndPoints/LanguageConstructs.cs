@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace code_spectacles_client.AllEndPoints
+namespace code_learning_spectacles_cli.AllEndPoints
 {
     internal class LanguageConstructs
     {
@@ -20,7 +20,7 @@ namespace code_spectacles_client.AllEndPoints
         public (HttpResponseMessage, string) GetResponse()
         {
             // add check here for if tuple is empty
-            return responseTuple;
+            return this.responseTuple;
         }
 
         public async void HitLanguageConstructs(string langConstructId = "")
@@ -28,7 +28,7 @@ namespace code_spectacles_client.AllEndPoints
             HttpResponseMessage response;
             if (langConstructId == "")
             {
-                Console.WriteLine($"Getting all language construct types...");
+                //Console.WriteLine($"Getting all language construct types...");
                 response = this.client.GetAsync("Languageconstructs").Result;
             }
             else

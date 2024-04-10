@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace code_spectacles_client
+namespace code_learning_spectacles_cli
 {
     internal class ConstructTypes
     {
@@ -20,7 +20,7 @@ namespace code_spectacles_client
         public (HttpResponseMessage, string) GetResponse()
         {
             // add check here for if tuple is empty
-            return responseTuple;
+            return this.responseTuple;
         }
 
         public async void HitConstructTypes(string constructTypeId = "")

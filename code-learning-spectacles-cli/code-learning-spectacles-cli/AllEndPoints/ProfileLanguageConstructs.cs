@@ -1,24 +1,20 @@
-﻿using Newtonsoft.Json;
+﻿using code_learning_spectacles_cli.Models;
+using System.Text.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
-namespace code_spectacles_client.AllEndPoints
+namespace code_learning_spectacles_cli.AllEndPoints
 {
     internal class ProfileLanguageConstructs
     {
         (HttpResponseMessage, string) responseTuple;
         readonly HttpClient client;
-
-        internal class Favourite
-        {
-            public int profileId { get; set; }
-            public int languageconstructId { get; set; }
-            public string notes { get; set; }
-        }
         // Constructor
         public ProfileLanguageConstructs(HttpClient client)
         {
@@ -28,7 +24,7 @@ namespace code_spectacles_client.AllEndPoints
         public (HttpResponseMessage, string) GetResponse()
         {
             // add check here for if tuple is empty
-            return responseTuple;
+            return this.responseTuple;
         }
 
         public async void HitProfileLanguageConstructs(string profLangConstructId = "")
@@ -48,13 +44,11 @@ namespace code_spectacles_client.AllEndPoints
             this.responseTuple = (response, responseStr);
         }
 
-        public async void PostNote(Favourite payload)
+        public async void PostNote(Endpoints.Payload payload)
         {
             Console.WriteLine("Posting...");
-            var stringPayload = JsonConvert.SerializeObject(payload);
-            var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
-            // Discard response with "_"
-            _ = await this.client.PostAsync("Profilelanguageconstructs", httpContent); // Don't know if this is right ?
+            using StringContent jsonContent = new(JsonSerializer.Serialize(new { Profileid = Int32.Parse(Helpers.ProfileID), Languageconstructid = payload.constructId, Notes = payload.note }), Encoding.UTF8, "application/json");
+            using HttpResponseMessage createProfileResponse = await Endpoints.client.PostAsync("Profilelanguageconstructs", jsonContent);
             Console.WriteLine("Note posted");
         }
     }

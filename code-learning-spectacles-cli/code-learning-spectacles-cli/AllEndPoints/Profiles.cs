@@ -5,36 +5,36 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace code_spectacles_client
+namespace code_learning_spectacles_cli.AllEndPoints
 {
-    internal class CodingLanguages
+    internal class Profiles
     {
         (HttpResponseMessage, string) responseTuple;
         readonly HttpClient client;
         // Constructor
-        public CodingLanguages(HttpClient client)
+        public Profiles(HttpClient client)
         {
             this.client = client;
         }
 
         public (HttpResponseMessage, string) GetResponse()
         {
-            return responseTuple;
+            return this.responseTuple;
         }
 
-        // GET ALL coding languages
-        public async void HitCodingLanguages(string languageId = "")
+        // GET ALL code constructs
+        public async void HitProfiles(string profileId = "")
         {
             HttpResponseMessage response;
-            if (languageId == "")
+            if (profileId == "")
             {
-                Console.WriteLine("Getting all Codinglanguages...");
-                response = this.client.GetAsync("Codinglanguages").Result;
+                Console.WriteLine("Getting all profiles...");
+                response = this.client.GetAsync("Profiles").Result;
             }
             else
             {
-                Console.WriteLine($"Getting language by languageId {languageId}...");
-                response = client.GetAsync($"Codinglanguages/{languageId}").Result;
+                Console.WriteLine($"Getting profile by profileId {profileId}...");
+                response = client.GetAsync($"Profiles/{profileId}").Result;
             }
             string responseStr = await response.Content.ReadAsStringAsync();
             this.responseTuple = (response, responseStr);

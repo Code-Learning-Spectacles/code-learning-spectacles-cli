@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace code_spectacles_client
+namespace code_learning_spectacles_cli
 {
     internal class CodeConstructs
     {
@@ -19,7 +19,7 @@ namespace code_spectacles_client
 
         public (HttpResponseMessage, string) GetResponse()
         {
-            return responseTuple;
+            return this.responseTuple;
         }
 
         // GET ALL code constructs
@@ -34,7 +34,7 @@ namespace code_spectacles_client
             else
             {
                 Console.WriteLine($"Getting construct with constructId {constructId}...");
-                response = client.GetAsync($"Codeconstructs/{constructId}").Result;
+                response = this.client.GetAsync($"Codeconstructs/{constructId}").Result;
             }
             string responseStr = await response.Content.ReadAsStringAsync();
             this.responseTuple = (response, responseStr);
