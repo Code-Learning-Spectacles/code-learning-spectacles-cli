@@ -1,4 +1,5 @@
 ﻿using code_learning_spectacles_cli.Models;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -9,13 +10,14 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
+
 namespace code_learning_spectacles_cli
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(Environment.GetEnvironmentVariable("ACCESS_TOKEN"));
+        Console.WriteLine(Environment.GetEnvironmentVariable("ACCESS_TOKEN"));
             Endpoints codeSpecsEndpoints = new Endpoints();
             Authenticator authenticator = new Authenticator();
             authenticator.AuthenticateAsync();
@@ -64,6 +66,8 @@ namespace code_learning_spectacles_cli
 
         static void ProcessCommand(Endpoints endpoints, string command)
         {
+            if (command != "note") endpoints.clearCurrentState();
+
             switch (command)
             {
                 case "available-constructs":
@@ -91,7 +95,10 @@ namespace code_learning_spectacles_cli
                     endpoints.GetSingleConstruct();
                     break;
                 case "note":
-                    endpoints.FavouriteConstruct(constructId: 1, note: "This is a note posted during testing");
+                    endpoints.FavouriteConstruct();
+                    break;
+                case "view-notes":
+                    endpoints.ViewNotes();
                     break;
                 default:
                     Console.WriteLine(">> Invalid command.");

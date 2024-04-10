@@ -17,15 +17,25 @@ namespace code_learning_spectacles_cli
         // All responses are stored in this tuple
         (HttpResponseMessage response, string responseStr) responseTuple;
         Dictionary<int, int> dictConstructTypes = new Dictionary<int, int>();
+        Dictionary<string, string> dictLanguages = new Dictionary<string, string>();
+        string currentLanguage = "";
+        string currentType = "";
+        string currentConstruct = "";
+        int codeConstructId = -1;
+        int codeLanguageId = -1;
+        int codeLanguageConstructId = -1;
 
         public struct Payload
         {
-            public int constructId;
+            public int languageconstructId;
             public string note;
         }
 
         public Endpoints()
         {
+            dictLanguages.Add("1", "JavaScript");
+            dictLanguages.Add("2", "C#");
+            dictLanguages.Add("3", "Python");
             ConnectClient();
         }
         private void ConnectClient()
@@ -54,7 +64,16 @@ namespace code_learning_spectacles_cli
                 Console.ResetColor();
             }
         }
-
+        public void clearCurrentState() 
+        { 
+            dictConstructTypes.Clear(); 
+            codeConstructId = -1;
+            currentLanguage = "";
+            currentType = "";
+            currentConstruct = "";
+            codeLanguageId = -1;
+            codeLanguageConstructId = -1;
+        }
         // GET all code constructs
         public void GetCodeConstructs(string constructId = "")
         {
@@ -87,13 +106,13 @@ namespace code_learning_spectacles_cli
                         foreach (JsonElement element in root.EnumerateArray())
                         {
                             JsonElement nameElement;
-                            JsonElement constructTypeIdElement;
-                            element.TryGetProperty("codeconstructid", out constructTypeIdElement);
+                            JsonElement constructIdElement;
+                            element.TryGetProperty("codeconstructid", out constructIdElement);
                             if (element.TryGetProperty("name", out nameElement) && nameElement.ValueKind == JsonValueKind.String)
                             {
                                 string name = nameElement.GetString();
                                 Console.WriteLine($"{index}. {name}");
-                                this.dictConstructTypes.Add(index, constructTypeIdElement.GetInt32());
+                                this.dictConstructTypes.Add(index, constructIdElement.GetInt32());
                                 index++;
                             }
                         }
@@ -182,7 +201,7 @@ namespace code_learning_spectacles_cli
             LanguageConstructs langConstructsObj = new LanguageConstructs(client);
             langConstructsObj.HitLanguageConstructs(langConstructId);
             this.responseTuple = langConstructsObj.GetResponse();
-            PrintResponse(this.responseTuple.response, this.responseTuple.responseStr);
+            //PrintResponse(this.responseTuple.response, this.responseTuple.responseStr);
         }
 
         public void GetLanguageConstructByLanguageIdByConstructId(string langId, string constructId)
@@ -190,7 +209,7 @@ namespace code_learning_spectacles_cli
             LanguageConstructs langConstructsObj = new LanguageConstructs(client);
             langConstructsObj.HitLanguageConstructsByLangIdByConstructId(langId, constructId);
             this.responseTuple = langConstructsObj.GetResponse();
-            Console.WriteLine($"LanguageId: {langId}, codeConstructId: {constructId}");
+            //Console.WriteLine($"LanguageId: {langId}, codeConstructId: {constructId}");
         }
 
         public void GetProfileLanguageConstructs(string profLangConstructId = "")
@@ -231,15 +250,29 @@ namespace code_learning_spectacles_cli
             PrintResponse(this.responseTuple.response, this.responseTuple.responseStr);
         }
 
-        public void FavouriteConstruct(int constructId, string note)
+        public void FavouriteConstruct()
         {
+            Console.WriteLine(">> Enter some notes below:");
+            string note = Console.ReadLine();
             ProfileLanguageConstructs langObj = new ProfileLanguageConstructs(client);
             Payload payload = new Payload
             {
-                constructId = constructId,
+                languageconstructId = codeLanguageConstructId,
                 note = note
             };
-            langObj.PostNote(payload);
+            langObj.HitPostNote(payload);
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Note Posted, view notes with command 'view-notes'");
+            Console.WriteLine($"CodeconstructId: {codeConstructId}, CodelanguageId: {codeLanguageId}");
+            Console.ResetColor();
+        }
+        public void ViewNotes()
+        {
+            ProfileLanguageConstructs profLangConstructsObj = new ProfileLanguageConstructs(client);
+            profLangConstructsObj.HitViewNotes();
+            this.responseTuple = profLangConstructsObj.GetResponse();
+            PrintNotes(responseTuple.responseStr);
+            //PrintResponse(this.responseTuple.response, this.responseTuple.responseStr);
         }
 
         public void PrintResponse(HttpResponseMessage response, string responseStr, bool print = true)
@@ -279,6 +312,7 @@ namespace code_learning_spectacles_cli
                 Console.Write("\n>> Enter the number corresponding to your choice: ");
                 languageChoice = Console.ReadLine();
             }
+            codeLanguageId = Int32.Parse(languageChoice);
 
             Console.WriteLine("\n>> Please choose a coding construct type:\n");
             GetConstructTypes();
@@ -300,14 +334,12 @@ namespace code_learning_spectacles_cli
                 Console.Write("\n>> Enter the number corresponding to your choice: ");
                 constructId = Console.ReadLine();
             }
-            int codeConstructId = this.dictConstructTypes[construct];
-
+            codeConstructId = this.dictConstructTypes[construct];
 
             Console.Write("\n");
             // Now you can call the appropriate method to fetch the desired data based on the choices
             FetchData(languageChoice, codeConstructId.ToString());
             PrintAConstruct(this.responseTuple.responseStr);
-            this.dictConstructTypes.Clear();
         }
 
         private Dictionary<int, string> languageConstructs = new Dictionary<int, string>();
@@ -363,12 +395,45 @@ namespace code_learning_spectacles_cli
 
             // Extract the "construct" part
             string extractConstruct = jsonArray[0]["construct"].ToString();
-
+            currentConstruct = extractConstruct;
+            codeLanguageConstructId = (int)jsonArray[0]["languageconstructid"];
             // Print the extracted construct
             Console.WriteLine(extractConstruct);
         }
 
+        private void PrintNotes(string jsonString)
+        {
+            // Parse the JSON string
+            JArray jsonArray = JArray.Parse(jsonString);
 
+            foreach (JObject jsonObject in jsonArray) 
+            {
+                string note = jsonObject["notes"].ToString();
+                string languageconstructid = jsonObject["languageconstructid"].ToString();
+                GetLanguageConstruct(languageconstructid);
+                string codingLanguage = HelperGetCodingLanguage(responseTuple.responseStr);
+                string construct = HelperGetConstruct(responseTuple.responseStr);
+                Console.WriteLine($"Language: {codingLanguage}\nConstruct: {construct}");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"Note: {note}");
+                Console.ResetColor();
+            }
+        }
+
+        private string HelperGetCodingLanguage(string jsonString)
+        {
+            var jsonArray = JObject.Parse(jsonString);
+            JObject jsonObject = JObject.Parse(jsonString);
+            int codingLanguageId = (int)jsonObject["codinglanguageid"];
+            return dictLanguages[codingLanguageId.ToString()];
+        }
+
+        private string HelperGetConstruct(string jsonString)
+        {
+            var jsonArray = JObject.Parse(jsonString);
+            JObject jsonObject = JObject.Parse(jsonString);
+            return (string)jsonObject["construct"];
+        }
         private void PrintLanguageConstruct(HttpResponseMessage response, string jsonResponse, int langConstructId, int constructTypeId, int constructIdAsint)
         {
             if (response.IsSuccessStatusCode)
