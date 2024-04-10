@@ -1,0 +1,107 @@
+name: Build and Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  tag_version:
+    name: Tag new version
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Get all tags
+        id: get_tags
+        run: git fetch --tags origin
+
+      - name: Find previous tag
+        id: previous_tag
+        uses: WyriHaximus/github-action-get-previous-tag@v1.3.0
+        with:
+          prefix: v
+          fallback: v0.0.0
+
+      - name: Calculate next version
+        id: semvers
+        uses: WyriHaximus/github-action-next-semvers@v1.2.1
+        with:
+          version: ${{ steps.previous_tag.outputs.tag }}
+
+      - name: Create new patch
+        id: create_tag
+        uses: rickstaa/action-create-tag@v1.6.2
+        with:
+          tag: ${{ steps.semvers.outputs.v_patch }}
+          commit_sha: ${{ github.sha }}
+
+      - name: Store nextTag as artifact
+        run: echo "${{ steps.semvers.outputs.v_patch }}" > nextTag.txt
+
+      - name: Upload nextTag.txt as an artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: nextTag
+          path: nextTag.txt
+
+  build_and_release:
+    name: Build and Release
+    runs-on: windows-latest
+    needs: tag_version
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Download nextTag.txt artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: nextTag
+          path: ./nextTag.txt
+
+      - name: Read nextTag from file
+        id: read_next_tag
+        run: |
+          $filePath = (Get-ChildItem -Path './nextTag.txt')
+          $content = Get-Content -Path $filePath -Raw
+          echo "::set-output name=nextTag::$content"
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "8.x"
+
+      - name: Build DOTNET Release
+        working-directory: "./code-learning-spectacles-cli"
+        run: |
+          dotnet publish -r win-x64 -p:PublishSingleFile=true --self-contained true -c Release
+          Compress-Archive -Path "code-learning-spectacles-cli/bin/Release/net8.0/win-x64/publish" -DestinationPath "cli-windows-x64.zip"
+
+      - name: Create Github Release
+        if: github.ref == 'refs/heads/main'
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          tag_name: ${{ steps.read_next_tag.outputs.nextTag }}
+          release_name: ${{ steps.read_next_tag.outputs.nextTag }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        if: github.ref == 'refs/heads/main'
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: code-learning-spectacles-cli/wpf-windows-x64.zip
+          asset_name: CodeLearningSpectaclesCLI.zip
+          asset_content_type: application/zip
