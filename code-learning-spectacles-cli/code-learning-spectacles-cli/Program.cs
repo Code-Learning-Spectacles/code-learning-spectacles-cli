@@ -39,10 +39,22 @@ namespace code_learning_spectacles_cli
 
                 }
             }
+            while (Authenticator.loginName == "")
+            {
 
+            }
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine($"Logged in as {Authenticator.loginName}");
+            Console.ResetColor();
+            Console.WriteLine("                                                                                                    \r\n                                                                                                    \r\n                                                                                                    \r\n                                                                                                    \r\n       █████████████████████████████████                     █████████████████████████████████      \r\n     ██████████████████████████████████████████████████████████████████████████████████████████     \r\n     ████████████                    ██████████████████████████                    ████████████     \r\n      █████████                          ██████████████████                          ██████████     \r\n        ██████                            ████████████████                            ███████       \r\n         █████                           ███████    ███████                           ██████        \r\n         █████                           ██████      ██████                           █████         \r\n         █████                           █████        █████                           █████         \r\n          █████                         ██████        ██████                         █████          \r\n          █████                        ██████          ██████                        █████          \r\n           █████                      ██████            ██████                      █████           \r\n            █████                    █████                █████                    █████            \r\n             ███████              ███████                  ███████              ███████             \r\n               ████████████████████████                      ████████████████████████               \r\n                  █████████████████                              █████████████████                  \r\n                                                                                                    \r\n                                                                                                    \r\n                                                                                                    \r\n                                                                                                    ");
+            Console.WriteLine("   ____          _           _                          _                  ____                  _             _           \r\n  / ___|___   __| | ___     | |    ___  __ _ _ __ _ __ (_)_ __   __ _     / ___| _ __   ___  ___| |_ __ _  ___| | ___  ___ \r\n | |   / _ \\ / _` |/ _ \\    | |   / _ \\/ _` | '__| '_ \\| | '_ \\ / _` |    \\___ \\| '_ \\ / _ \\/ __| __/ _` |/ __| |/ _ \\/ __|\r\n | |__| (_) | (_| |  __/    | |__|  __/ (_| | |  | | | | | | | | (_| |     ___) | |_) |  __/ (__| || (_| | (__| |  __/\\__ \\\r\n  \\____\\___/ \\__,_|\\___|    |_____\\___|\\__,_|_|  |_| |_|_|_| |_|\\__, |    |____/| .__/ \\___|\\___|\\__\\__,_|\\___|_|\\___||___/\r\n                                                                |___/           |_|                                        ");
+            Console.WriteLine();
+            DisplayHelp();
             while (true)
             {
-                Console.WriteLine("\n>> Please provide a command or type '--help' to get a list of available commands:");
+                Console.WriteLine();
+                Console.WriteLine(">> Please provide a command or type '--help' to get a list of available commands:\n");
+
                 string input = Console.ReadLine().ToLower();
 
                 if (input == "--help")
@@ -69,7 +81,6 @@ namespace code_learning_spectacles_cli
             Console.WriteLine(">> coding-languages: Retrieves all coding languages or a specific coding language by ID.");
             Console.WriteLine(">> construct-types: Retrieves all construct types or a specific construct type by ID.");
             Console.WriteLine(">> get-construct: Returns the construt type for a given language");
-            Console.WriteLine("\n>> Short hand notation: java for-loop");
         }
 
         static void ProcessCommand(Endpoints endpoints, string command)

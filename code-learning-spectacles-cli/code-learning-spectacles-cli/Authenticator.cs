@@ -16,6 +16,7 @@ namespace code_learning_spectacles_cli
         }
 
         public static bool authenticationSuccessful = false;
+        public static string loginName = "";
         public async static void AuthenticateAsync()
         {
             //string url = "https://github.com/login/device/code?client_id=" + Environment.GetEnvironmentVariable("CLIENT_ID") + "&scope=read:user";
@@ -67,6 +68,7 @@ namespace code_learning_spectacles_cli
                     string content = await response.Content.ReadAsStringAsync();
                     var auth = JsonSerializer.Deserialize<AuthObject>(content);
                     CheckProfile(auth.login);
+                    loginName = auth.login;
                     return auth;
                 }
             }
@@ -79,7 +81,6 @@ namespace code_learning_spectacles_cli
 
         private async static void CheckProfile(string name)
         {
-            Console.WriteLine($"Checking profile with name {name}...");
             try
             {
                 Endpoints.client.DefaultRequestHeaders.Accept.Clear();
@@ -102,6 +103,7 @@ namespace code_learning_spectacles_cli
                         //Store id for future use
                         Helpers.ProfileID = "" + profile.Profileid;
                     }
+                    loginName = name;
                 }
             }
             catch (HttpRequestException ex)

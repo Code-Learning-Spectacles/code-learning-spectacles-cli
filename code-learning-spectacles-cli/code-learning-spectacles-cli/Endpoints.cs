@@ -36,27 +36,10 @@ namespace code_learning_spectacles_cli
         }
         private void ConnectClient()
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"Attempting to connect to {client.BaseAddress}...");
-            Console.ResetColor();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
             CodeConstructs codeConstructsObj = new CodeConstructs(client);
-            codeConstructsObj.HitCodeConstructs();
-            this.responseTuple = codeConstructsObj.GetResponse();
-            if (this.responseTuple.response.IsSuccessStatusCode)
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Client connection successful");
-                Console.ResetColor();
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"Could not establish connection to {client.BaseAddress}");
-                Console.ResetColor();
-            }
         }
         public void clearCurrentState() 
         { 
@@ -214,7 +197,6 @@ namespace code_learning_spectacles_cli
             langObj.HitPostNote(payload);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Note Posted, view notes with command 'view-notes'");
-            Console.WriteLine($"CodeconstructId: {codeConstructId}, CodelanguageId: {codeLanguageId}");
             Console.ResetColor();
         }
         public void ViewNotes()
@@ -223,7 +205,6 @@ namespace code_learning_spectacles_cli
             profLangConstructsObj.HitViewNotes();
             this.responseTuple = profLangConstructsObj.GetResponse();
             PrintNotes(responseTuple.responseStr);
-            //PrintResponse(this.responseTuple.response, this.responseTuple.responseStr);
         }
 
         public void PrintResponse(HttpResponseMessage response, string responseStr, bool print = true)
@@ -328,6 +309,8 @@ namespace code_learning_spectacles_cli
                 Console.WriteLine($"Language: {codingLanguage}\nConstruct: {construct}");
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine($"Note: {note}");
+                Console.WriteLine("═══════════════════════════════════════════════════════════════════");
+
                 Console.ResetColor();
             }
         }
