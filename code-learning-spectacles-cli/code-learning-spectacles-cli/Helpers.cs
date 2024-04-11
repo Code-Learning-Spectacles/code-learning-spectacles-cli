@@ -70,7 +70,6 @@ namespace code_learning_spectacles_cli
         internal static async Task<bool> GetAccessTokenAsync(HttpClient client, DeviceVerification deviceVerification)
         {
             await Task.Delay(5000);
-            //string url = "https://github.com/login/oauth/access_token?client_id=" + Environment.GetEnvironmentVariable("CLIENT_ID") + "&device_code=" + deviceVerification.device_code + "&grant_type=urn:ietf:params:oauth:grant-type:device_code";
             string url = "https://github.com/login/oauth/access_token?client_id=" + "6ab621f34a0c32c827fe" + "&device_code=" + deviceVerification.device_code + "&grant_type=urn:ietf:params:oauth:grant-type:device_code";
 
             HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Post, url);

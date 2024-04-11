@@ -89,8 +89,6 @@ namespace code_learning_spectacles_cli
 
         static void ProcessCommand(Endpoints endpoints, string command)
         {
-            //if (command != "note") endpoints.clearCurrentState();
-
             switch (command)
             {
                 case "available-constructs":

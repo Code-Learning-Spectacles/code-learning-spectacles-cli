@@ -8,7 +8,7 @@ namespace code_learning_spectacles_cli
 {
     internal class Endpoints
     {
-        // Static mean there is only ever one instance of client, no matter how many Endpoint objects you have
+        // Static means there is only ever one instance of client, no matter how many Endpoint objects you have
         public static HttpClient client = new HttpClient()
         {
             BaseAddress = new Uri("http://api-env.eba-8bvi8xmn.eu-west-1.elasticbeanstalk.com/api/v1/")
@@ -76,7 +76,6 @@ namespace code_learning_spectacles_cli
                     if (root.ValueKind == JsonValueKind.Array)
                     {
                         int index = 1;
-                        // <key, value> --> <index, constructTypeId>
                         foreach (JsonElement element in root.EnumerateArray())
                         {
                             JsonElement nameElement;

@@ -19,7 +19,6 @@ namespace code_learning_spectacles_cli
         public static string loginName = "";
         public async static void AuthenticateAsync()
         {
-            //string url = "https://github.com/login/device/code?client_id=" + Environment.GetEnvironmentVariable("CLIENT_ID") + "&scope=read:user";
             string url = "https://github.com/login/device/code?client_id=" + "6ab621f34a0c32c827fe" + "&scope=read:user";
 
             HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Post, url);
