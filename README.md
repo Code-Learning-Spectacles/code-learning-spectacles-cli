@@ -4,7 +4,6 @@ Welcome to the **Code Learning Spectacles Desktop Client**! This application all
 
 ## Technology Used
 - **C#**
-- **WPF** (Windows Presentation Foundation)
 - **.NET Framework**
 
 ## How to Run
