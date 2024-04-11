@@ -16,7 +16,7 @@ namespace code_learning_spectacles_cli
         }
 
         public static bool authenticationSuccessful = false;
-        public async void AuthenticateAsync()
+        public async static void AuthenticateAsync()
         {
             //string url = "https://github.com/login/device/code?client_id=" + Environment.GetEnvironmentVariable("CLIENT_ID") + "&scope=read:user";
             string url = "https://github.com/login/device/code?client_id=" + "6ab621f34a0c32c827fe" + "&scope=read:user";
@@ -41,25 +41,26 @@ namespace code_learning_spectacles_cli
                     success = await Helpers.GetAccessTokenAsync(Endpoints.client, deviceVerification);
                     Console.Write(".");
                 }
+                Endpoints.client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Environment.GetEnvironmentVariable("ACCESS_TOKEN"));
                 Console.WriteLine("authenticated");
                 Helpers.Profile = await GetProfileAsync();
                 authenticationSuccessful = true;
             }
         }
 
-        public async void LoginHelper()
+        public async static void LoginHelper()
         {
             Helpers.Profile = await GetProfileAsync();
         }
 
-        public async Task<AuthObject?> GetProfileAsync()
+        public async static Task<AuthObject?> GetProfileAsync()
         {
             try
             {
                 string url = "https://api.github.com/user";
                 HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Get, url);
                 msg.Headers.Add("User-Agent", "CodeLearningSpectaclesAPI");
-
+                msg.Headers.Add("Authorization", "Bearer " + Environment.GetEnvironmentVariable("ACCESS_TOKEN"));
                 HttpResponseMessage response = await Endpoints.client.SendAsync(msg);
                 if (response.IsSuccessStatusCode)
                 {
@@ -76,7 +77,7 @@ namespace code_learning_spectacles_cli
             return null;
         }
 
-        private async void CheckProfile(string name)
+        private async static void CheckProfile(string name)
         {
             Console.WriteLine($"Checking profile with name {name}...");
             try

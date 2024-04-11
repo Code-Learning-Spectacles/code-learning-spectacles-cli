@@ -8,9 +8,11 @@ namespace code_learning_spectacles_cli
 {
     internal class Endpoints
     {
-        string baseUri = "https://localhost:7107/api/v1/";
         // Static mean there is only ever one instance of client, no matter how many Endpoint objects you have
-        public static HttpClient client = new HttpClient();
+        public static HttpClient client = new HttpClient()
+        {
+            BaseAddress = new Uri("https://localhost:7107/api/v1/")
+        };
         // All responses are stored in this tuple
         (HttpResponseMessage response, string responseStr) responseTuple;
         Dictionary<int, int> dictConstructTypes = new Dictionary<int, int>();
@@ -34,15 +36,12 @@ namespace code_learning_spectacles_cli
         }
         private void ConnectClient()
         {
-            client.BaseAddress = new Uri(baseUri);
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Attempting to connect to {client.BaseAddress}...");
             Console.ResetColor();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.Add("User-Agent", "CodeLearningSpectaclesAPI");
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Environment.GetEnvironmentVariable("ACCESS_TOKEN"));
             CodeConstructs codeConstructsObj = new CodeConstructs(client);
             codeConstructsObj.HitCodeConstructs();
             this.responseTuple = codeConstructsObj.GetResponse();
