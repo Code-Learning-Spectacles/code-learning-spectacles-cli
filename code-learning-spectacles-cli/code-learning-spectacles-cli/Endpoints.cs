@@ -86,7 +86,10 @@ namespace code_learning_spectacles_cli
                             {
                                 string name = nameElement.GetString();
                                 Console.WriteLine($"{index}. {name}");
-                                this.dictConstructTypes.Add(index, constructIdElement.GetInt32());
+                                if (!dictConstructTypes.ContainsKey(index))
+                                {
+                                    this.dictConstructTypes.Add(index, constructIdElement.GetInt32());
+                                }
                                 index++;
                             }
                         }
