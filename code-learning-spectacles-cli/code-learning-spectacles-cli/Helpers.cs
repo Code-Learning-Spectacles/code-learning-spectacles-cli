@@ -9,7 +9,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-//using System.Windows.Shapes;
 
 namespace code_learning_spectacles_cli
 {
