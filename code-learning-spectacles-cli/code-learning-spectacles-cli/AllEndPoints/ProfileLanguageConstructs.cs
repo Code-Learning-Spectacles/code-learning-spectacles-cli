@@ -23,7 +23,6 @@ namespace code_learning_spectacles_cli.AllEndPoints
 
         public (HttpResponseMessage, string) GetResponse()
         {
-            // add check here for if tuple is empty
             return this.responseTuple;
         }
 
@@ -44,12 +43,18 @@ namespace code_learning_spectacles_cli.AllEndPoints
             this.responseTuple = (response, responseStr);
         }
 
-        public async void PostNote(Endpoints.Payload payload)
+        public async void HitPostNote(Endpoints.Payload payload)
         {
             Console.WriteLine("Posting...");
-            using StringContent jsonContent = new(JsonSerializer.Serialize(new { Profileid = Int32.Parse(Helpers.ProfileID), Languageconstructid = payload.constructId, Notes = payload.note }), Encoding.UTF8, "application/json");
+            using StringContent jsonContent = new(JsonSerializer.Serialize(new { Profileid = Int32.Parse(Helpers.ProfileID), Languageconstructid = payload.languageconstructId, Notes = payload.note }), Encoding.UTF8, "application/json");
             using HttpResponseMessage createProfileResponse = await Endpoints.client.PostAsync("Profilelanguageconstructs", jsonContent);
-            Console.WriteLine("Note posted");
+        }
+        public async void HitViewNotes()
+        {
+            HttpResponseMessage response;
+            response = client.GetAsync($"Profilelanguageconstructs/getByProfile/{Helpers.ProfileID}").Result;
+            string responseStr = await response.Content.ReadAsStringAsync();
+            this.responseTuple = (response, responseStr);
         }
     }
 }

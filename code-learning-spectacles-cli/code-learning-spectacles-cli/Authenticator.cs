@@ -45,22 +45,22 @@ namespace code_learning_spectacles_cli
                 Helpers.Profile = await GetProfileAsync();
                 authenticationSuccessful = true;
             }
-            //string temp = "ivan";
-            //return response2;
-
         }
 
-        private async Task<AuthObject?> GetProfileAsync()
+        public async void LoginHelper()
+        {
+            Helpers.Profile = await GetProfileAsync();
+        }
+
+        public async Task<AuthObject?> GetProfileAsync()
         {
             try
             {
                 string url = "https://api.github.com/user";
                 HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Get, url);
                 msg.Headers.Add("User-Agent", "CodeLearningSpectaclesAPI");
-                //msg.Headers.Add("Authorization", "Bearer " + Environment.GetEnvironmentVariable("ACCESS_TOKEN"));
-                msg.Headers.Add("Authorization", "Bearer " + Helpers.accesstokentemp);
-                HttpResponseMessage response = await Endpoints.client.SendAsync(msg);
 
+                HttpResponseMessage response = await Endpoints.client.SendAsync(msg);
                 if (response.IsSuccessStatusCode)
                 {
                     string content = await response.Content.ReadAsStringAsync();
@@ -81,7 +81,6 @@ namespace code_learning_spectacles_cli
             Console.WriteLine($"Checking profile with name {name}...");
             try
             {
-                Endpoints.client.DefaultRequestHeaders.Add("Authorization", "Bearer " + Environment.GetEnvironmentVariable("ACCESS_TOKEN"));
                 Endpoints.client.DefaultRequestHeaders.Accept.Clear();
                 Endpoints.client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var profiles = await Endpoints.client.GetFromJsonAsync<List<Profile>>("Profiles");

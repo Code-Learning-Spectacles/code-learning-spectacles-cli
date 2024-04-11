@@ -14,7 +14,6 @@ namespace code_learning_spectacles_cli.Models
         public string construct { get; set; }
         public object codeconstruct { get; set; }
         public object codinglanguage { get; set; }
-        public object[] profilelanguageconstructs { get; set; }
     }
 
 }

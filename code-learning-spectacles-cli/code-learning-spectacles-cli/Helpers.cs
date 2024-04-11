@@ -82,8 +82,8 @@ namespace code_learning_spectacles_cli
             if (accessToken != null && accessToken.access_token != string.Empty)
             {
                 accesstokentemp = accessToken.access_token;
-                //WriteToFile(accessToken.access_token);
-                //Environment.SetEnvironmentVariable("ACCESS_TOKEN", accessToken.access_token);
+                WriteToFile(accessToken.access_token);
+                Environment.SetEnvironmentVariable("ACCESS_TOKEN", accessToken.access_token);
                 return true;
             }
             return false;

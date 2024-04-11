@@ -1,4 +1,5 @@
 ﻿using code_learning_spectacles_cli.Models;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -9,24 +10,38 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
+
 namespace code_learning_spectacles_cli
 {
     class Program
     {
         static void Main(string[] args)
         {
-
             Endpoints codeSpecsEndpoints = new Endpoints();
+
             Authenticator authenticator = new Authenticator();
-            authenticator.AuthenticateAsync();
-
-            while (!Authenticator.authenticationSuccessful)
+            //string token = Helpers.ReadFromFile();
+            //token = Helpers.DecryptMessage(token);
+            //Console.WriteLine($"ACCESS_TOKEN decrypted: {token}");
+            //if (token != "")
+            if (Environment.GetEnvironmentVariable("ACCESS_TOKEN") != "")
             {
-
+                Environment.SetEnvironmentVariable("ACCESS_TOKEN", Environment.GetEnvironmentVariable("ACCESS_TOKEN"));
+                Authenticator.authenticationSuccessful = true;
+                authenticator.LoginHelper();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("You have been successfully authenticated");
+                Console.ResetColor();
             }
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("You have been successfully authenticated");
-            Console.ResetColor();
+            else
+            {
+                authenticator.AuthenticateAsync();
+                while (!Authenticator.authenticationSuccessful)
+                {
+
+                }
+            }
+
             while (true)
             {
                 Console.WriteLine("\n>> Please provide a command or type '--help' to get a list of available commands:");
@@ -46,7 +61,7 @@ namespace code_learning_spectacles_cli
                 }
             }
 
-            Console.WriteLine(">> Done");
+            Console.WriteLine(">> Exiting");
         }
 
         static void DisplayHelp()
@@ -55,15 +70,14 @@ namespace code_learning_spectacles_cli
             Console.WriteLine(">> available-constructs: Retrieves all code constructs or a specific code construct by ID.");
             Console.WriteLine(">> coding-languages: Retrieves all coding languages or a specific coding language by ID.");
             Console.WriteLine(">> construct-types: Retrieves all construct types or a specific construct type by ID.");
-            Console.WriteLine(">> GetLanguageConstruct: Retrieves all language constructs or a specific language construct by ID.");
-            Console.WriteLine(">> GetProfileLanguageConstructs: Retrieves all profile language constructs or a specific profile language construct by ID.");
-            Console.WriteLine(">> GetProfiles: Retrieves all profiles or a specific profile by ID.");
-            Console.WriteLine(">> GetProfileLanguageConstructsNotes: Retrieves the notes for the language constructor");
             Console.WriteLine(">> get-construct: Returns the construt type for a given language");
+            Console.WriteLine("\n>> Short hand notation: java for-loop");
         }
 
         static void ProcessCommand(Endpoints endpoints, string command)
         {
+            //if (command != "note") endpoints.clearCurrentState();
+
             switch (command)
             {
                 case "available-constructs":
@@ -75,23 +89,15 @@ namespace code_learning_spectacles_cli
                 case "construct-types":
                     endpoints.GetConstructTypes();
                     break;
-                case "getlanguageconstruct":
-                    endpoints.GetLanguageConstruct();
-                    break;
-                case "getprofilelanguageconstructs":
-                    endpoints.GetProfileLanguageConstructs();
-                    break;
-                case "getprofiles":
-                    endpoints.GetProfiles();
-                    break;
-                case "getprofilelanguageconstructsnotes":
-                    endpoints.GetProfileLanguageConstructsNotes();
-                    break;
                 case "get-construct":
-                    endpoints.chooseLanguageConstruct();
+                    endpoints.GetSingleConstruct();
                     break;
                 case "note":
-                    endpoints.FavouriteConstruct(constructId: 1, note: "This is a note posted during testing");
+                    endpoints.FavouriteConstruct();
+                    break;
+                case "view-notes":
+                    endpoints.ViewNotes();
+                    endpoints.clearCurrentState();
                     break;
                 default:
                     Console.WriteLine(">> Invalid command.");
