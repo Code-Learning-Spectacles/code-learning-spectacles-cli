@@ -7,7 +7,7 @@ Welcome to the **Code Learning Spectacles Desktop Client**! This application all
 - **.NET Framework**
 
 ## How to Run
-To run the Code Learning Spectacles Desktop Client, follow these steps:
+To run the Code Learning Spectacles CLI Client, follow these steps:
 
 1. **Download the Latest Release**: Download the latest .zip release from the releases section of the repository.
 
