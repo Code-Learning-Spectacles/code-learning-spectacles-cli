@@ -186,6 +186,13 @@ namespace code_learning_spectacles_cli
 
         public void FavouriteConstruct()
         {
+            if (codeConstructId == -1)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("View a construct first with 'get-construct'");
+                Console.ResetColor();
+                return;
+            }
             Console.WriteLine(">> Enter some notes below:");
             string note = Console.ReadLine();
             ProfileLanguageConstructs langObj = new ProfileLanguageConstructs(client);

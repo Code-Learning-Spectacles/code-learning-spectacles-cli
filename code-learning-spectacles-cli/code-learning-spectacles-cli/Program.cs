@@ -81,6 +81,10 @@ namespace code_learning_spectacles_cli
             Console.WriteLine(">> coding-languages: Retrieves all coding languages or a specific coding language by ID.");
             Console.WriteLine(">> construct-types: Retrieves all construct types or a specific construct type by ID.");
             Console.WriteLine(">> get-construct: Returns the construt type for a given language");
+            Console.WriteLine(">> note: After viewing a construct, type 'note' to favourite and write something about that construct");
+            Console.WriteLine(">> view-notes: Shows all the saved favourites and their notes for the signed-in profile");
+
+
         }
 
         static void ProcessCommand(Endpoints endpoints, string command)
