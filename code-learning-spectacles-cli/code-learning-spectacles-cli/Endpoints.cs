@@ -11,7 +11,7 @@ namespace code_learning_spectacles_cli
         // Static mean there is only ever one instance of client, no matter how many Endpoint objects you have
         public static HttpClient client = new HttpClient()
         {
-            BaseAddress = new Uri("https://localhost:7107/api/v1/")
+            BaseAddress = new Uri("http://api-env.eba-8bvi8xmn.eu-west-1.elasticbeanstalk.com/api/v1/")
         };
         // All responses are stored in this tuple
         (HttpResponseMessage response, string responseStr) responseTuple;
