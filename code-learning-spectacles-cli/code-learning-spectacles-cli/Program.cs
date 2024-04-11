@@ -19,23 +19,21 @@ namespace code_learning_spectacles_cli
         {
             Endpoints codeSpecsEndpoints = new Endpoints();
 
-            Authenticator authenticator = new Authenticator();
-            //string token = Helpers.ReadFromFile();
-            //token = Helpers.DecryptMessage(token);
-            //Console.WriteLine($"ACCESS_TOKEN decrypted: {token}");
-            //if (token != "")
-            if (Environment.GetEnvironmentVariable("ACCESS_TOKEN") != "")
+            string token = Helpers.ReadFromFile();
+            if (token != "")
             {
-                Environment.SetEnvironmentVariable("ACCESS_TOKEN", Environment.GetEnvironmentVariable("ACCESS_TOKEN"));
+                Environment.SetEnvironmentVariable("ACCESS_TOKEN", token);
+                Endpoints.client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Environment.GetEnvironmentVariable("ACCESS_TOKEN"));
                 Authenticator.authenticationSuccessful = true;
-                authenticator.LoginHelper();
+                Authenticator.LoginHelper();
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("You have been successfully authenticated");
                 Console.ResetColor();
             }
             else
             {
-                authenticator.AuthenticateAsync();
+                Authenticator.AuthenticateAsync();
+                Endpoints.client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Environment.GetEnvironmentVariable("ACCESS_TOKEN"));
                 while (!Authenticator.authenticationSuccessful)
                 {
 
