@@ -1,4 +1,4 @@
-﻿using code_learning_spectacles_cli.Models;
+using code_learning_spectacles_cli.Models;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Net;
@@ -83,8 +83,7 @@ namespace code_learning_spectacles_cli
             Console.WriteLine(">> get-construct: Returns the construt type for a given language");
             Console.WriteLine(">> note: After viewing a construct, type 'note' to favourite and write something about that construct");
             Console.WriteLine(">> view-notes: Shows all the saved favourites and their notes for the signed-in profile");
-
-
+            Console.WriteLine(">> logout: Log out and exit the program");
         }
 
         static void ProcessCommand(Endpoints endpoints, string command)
@@ -110,10 +109,21 @@ namespace code_learning_spectacles_cli
                     endpoints.ViewNotes();
                     endpoints.clearCurrentState();
                     break;
+                case "logout":
+                    LogOut();
+                    break;
                 default:
                     Console.WriteLine(">> Invalid command.");
                     break;
             }
+        }
+
+        static void LogOut()
+        {
+            Helpers.WriteToFile("");
+            Environment.SetEnvironmentVariable("ACCESS_TOKEN", null);
+            Console.WriteLine("Exiting...");
+            Environment.Exit(0);
         }
     }
 }
